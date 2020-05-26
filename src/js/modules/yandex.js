@@ -45,6 +45,19 @@ function dragElement(elmnt) {
         document.onmousemove = elementDrag;
     }
 
+    var isOutOfViewport = function (elem) {
+        var bounding = elem.getBoundingClientRect();
+        var out = {};
+        out.top = bounding.top < 0;
+        out.left = bounding.left < 0;
+        out.bottom = bounding.bottom > (window.innerHeight || document.documentElement.clientHeight);
+        out.right = bounding.right > (window.innerWidth || document.documentElement.clientWidth);
+        out.any = out.top || out.left || out.bottom || out.right;
+        out.all = out.top && out.left && out.bottom && out.right;
+
+        return out;
+    };
+
     function elementDrag(e) {
         e = e || window.event;
         e.preventDefault();
@@ -57,6 +70,14 @@ function dragElement(elmnt) {
     }
 
     function closeDragElement() {
+        var elem = document.querySelector('#reviews');
+        var isOut = isOutOfViewport(elem);
+
+        if (isOut.any) {
+            elem.style.top = '50%';
+            elem.style.left = '50%';
+        }
+
         document.onmouseup = null;
         document.onmousemove = null;
     }
